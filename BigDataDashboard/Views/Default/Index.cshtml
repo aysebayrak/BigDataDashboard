@@ -1,0 +1,33 @@
+﻿@model List<BigDataDashboard.DAL.Entites.PLATES>
+@{
+    Layout = null;
+}
+
+
+
+<link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+<!DOCTYPE html>
+
+
+<div class="container">
+    <br />
+    <br />
+    <table class="table table-bordered">
+        <tr>
+           
+            <th>Başlık</th>
+            <th>Durum</th>
+           
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.BRAND</td>
+                <td>@item.CASETYPE</td>
+             
+               
+            </tr>
+        }
+    </table>
+   
+</div>
