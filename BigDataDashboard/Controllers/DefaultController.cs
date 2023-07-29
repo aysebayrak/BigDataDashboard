@@ -33,6 +33,10 @@ namespace BigDataDashboard.Controllers
 
             var fuelType = (await connection.QueryAsync<FuelConclusion>("SELECT TOP 1 FUEL, COUNT(*) AS count FROM PLATES GROUP BY FUEL ORDER BY count DESC")).FirstOrDefault();
 
+            var shiftType = (await connection.QueryAsync<ShiftConclusion>("SELECT TOP 1 SHIFTTYPE, COUNT(*) AS count FROM PLATES GROUP BY SHIFTTYPE ORDER BY count DESC")).FirstOrDefault();
+
+            var caseType = (await connection.QueryAsync<CaseTypeConclusion>("SELECT TOP 1 CASATYPE, COUNT(*) AS count FROM PLATES GROUP BY CASETYPE ORDER BY count DESC")).FirstOrDefault();
+
             //marka
             ViewData["brandMax"] = brandMax.BRAND;
             ViewData["countMax"] = brandMax.COUNT;
@@ -58,6 +62,13 @@ namespace BigDataDashboard.Controllers
             ViewData["fuelType"] = fuelType.FUEL;
             ViewData["fuelTypeCount"] = fuelType.COUNT;
 
+            //vites
+            ViewData["shiftType"] = shiftType.SHIFTTYPE;
+            ViewData["shiftTypeCount"] = shiftType.COUNT;
+
+
+            ViewData["caseType"] = caseType.CASETYPE;
+            ViewData["caseTypeCount"] = caseType.COUNT;
 
 
 
@@ -65,5 +76,34 @@ namespace BigDataDashboard.Controllers
             return View();
 
         }
+
+
+
+        public async Task<IActionResult> Search(string value)
+        {
+
+            string query = @"
+            SELECT TOP 10000 BRAND, SUBSTRING(PLATE, 1, 2) AS PlatePrefix, SHIFTTYPE, FUEL
+            FROM PLATES
+            WHERE BRAND LIKE '%' + @
+Value+ '%'
+               OR PLATE LIKE '%' + @Keyword + '%'
+               OR SHIFTTYPE LIKE '%' + @Keyword + '%'
+               OR FUEL LIKE '%' + @Keyword + '%'
+        ";
+
+            await using var connection = new SqlConnection(_connectionString);
+            connection.Open();
+
+            // Sorguyu çalıştırın ve sonuçları alın
+            var searchResults = await connection.QueryAsync<SearchConclusion>(query, new { Keyword = value });
+
+            // Sonuçları JSON formatında döndürün
+            return Json(searchResults);
+
+        }
+
     }
+
+}
 }
