@@ -35,7 +35,7 @@ namespace BigDataDashboard.Controllers
 
             var shiftType = (await connection.QueryAsync<ShiftConclusion>("SELECT TOP 1 SHIFTTYPE, COUNT(*) AS count FROM PLATES GROUP BY SHIFTTYPE ORDER BY count DESC")).FirstOrDefault();
 
-            var caseType = (await connection.QueryAsync<CaseTypeConclusion>("SELECT TOP 1 CASATYPE, COUNT(*) AS count FROM PLATES GROUP BY CASETYPE ORDER BY count DESC")).FirstOrDefault();
+            //var caseType = (await connection.QueryAsync<CaseTypeConclusion>("SELECT TOP 1 CASETYPE, COUNT(*) AS count FROM PLATES GROUP BY CASETYPE ORDER BY count DESC")).FirstOrDefault();
 
             //marka
             ViewData["brandMax"] = brandMax.BRAND;
@@ -48,7 +48,7 @@ namespace BigDataDashboard.Controllers
             ViewData["colorMax"] = colorMax.COLOR;
             ViewData["countMin"] = colorMax.COUNT;
 
-            ViewData["colorMax"] = colorMin.COLOR;
+            ViewData["colorMin"] = colorMin.COLOR;
             ViewData["countMin"] = colorMin.COUNT;
 
             //plaka
@@ -67,8 +67,8 @@ namespace BigDataDashboard.Controllers
             ViewData["shiftTypeCount"] = shiftType.COUNT;
 
 
-            ViewData["caseType"] = caseType.CASETYPE;
-            ViewData["caseTypeCount"] = caseType.COUNT;
+            //ViewData["caseType"] = caseType.CASETYPE;
+            //ViewData["caseTypeCount"] = caseType.COUNT;
 
 
 
@@ -79,11 +79,11 @@ namespace BigDataDashboard.Controllers
 
 
 
-        public async Task<IActionResult> Search(string value)
+        public async Task<IActionResult> Search(string keyword)
         {
 
             string query = @"
-            SELECT TOP 10000 BRAND,COLOR, SUBSTRING(PLATE, 1, 2) AS PlateSet, SHIFTTYPE, FUEL
+            SELECT TOP 1000 BRAND,COLOR, SUBSTRING(PLATE, 1, 2) AS PlatePrefix, SHIFTTYPE, FUEL
             FROM PLATES
             WHERE BRAND LIKE '%' + @Keyword + '%'
                OR COLOR LIKE '%' + @Keyword + '%'
@@ -97,7 +97,7 @@ namespace BigDataDashboard.Controllers
 
             //sorguyu çalıştırmak ve sonuç alamak için 
             // "SearchConclusion" sınıfı, sorgu sonuçlarıyla eşleşen verileri temsil eden bir model sınıfı olmalıdır.
-            var searchResults = await connection.QueryAsync<SearchConclusion>(query, new { Keyword = value });
+            var searchResults = await connection.QueryAsync<SearchConclusion>(query, new { Keyword = keyword });
 
             // josn şeklinde  JsonResult" tipinde sonuç döndürü
             return Json(searchResults);
