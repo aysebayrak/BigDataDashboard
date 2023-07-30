@@ -218,27 +218,23 @@
 
                    
                 </div>
-                <!-- widget-success-card start -->
+                <!-- Arama Formu -->
 
-                
-            <div class="input-group mb-3">
+                  <div class="input-group mb-3">
                 <form method="post" id="searchForm">
                     <input type="text" name="keyword" class="form-control" placeholder="Ara" aria-label="Recipient's username" aria-describedby="basic-addon2">
                     <br />
-                        <br />
-                      
+                   
+                    
                     <div class="input-group-append">
-
                         <button class="btn btn-primary" type="submit">Ara</button>
                     </div>
                 </form>
-
             </div>
-            <br />
          
-
-
-              <div id="searchResult">
+            <br />
+         <!--Sonuç  Tablosu-->
+             <div id="searchResult">
                 <table class="table">
                     <thead>
                         <tr>
@@ -254,6 +250,8 @@
                              searchResultTable.innerHTML="" ;
                     </tbody>
                 </table>
+
+             
             </div>
            
              
@@ -278,24 +276,26 @@
 <script src="~/flat-able-lite/dist/assets/js/pages/dashboard-main.js"></script>
 
 
-
-    <script>
+<script>
         document.getElementById("searchForm").addEventListener("submit", function (event) {
-            event.preventDefault(); // Formun submit olayını engelle
+            //  varsayılan davranışı durdurur ve yerine JavaScript tarafından belirttiğimiz  işlevi çalıştırır.
+            event.preventDefault();  // form ile  sunucuya veriyi göndermeye çalıştığımda  bu kısım   tetiklenicek ve içindeki işlev çalışacak
 
-            var searchKeyword = document.getElementsByName("keyword")[0].value;
-            // Send the search keyword to the server using AJAX
+            var searchKeyword = document.getElementsByName("keyword")[0].value;  //inputu aldık. fetch: ile sunucuya istek gönderdik.
+          
+
+            //encodeURIComponent ile  verilen bir metin dizisindeki özel karakterleri, onların URL kodunu oluşturan karakterlere çevirir. 
             fetch(`/Default/Search?keyword=${encodeURIComponent(searchKeyword)}`)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data); // JSON verilerini konsolda göster
-                    // Display search results in the table
-                    var searchResultTable = document.getElementById("searchResult").getElementsByTagName("tbody")[0];
-                    searchResultTable.innerHTML = "";
-                    data.forEach(item => {
+                .then(response => response.json())  //sunucudan gelen yanıtı JSON formatına dönüştürmek için 
+                .then(data => {  //  gelen verileri data  değişkeninde tuttuk.
+                    console.log(data);
+                    
+                    var searchResultTable = document.getElementById("searchResult").getElementsByTagName("tbody")[0];  // tbody :  HTML tablolarının içeriğini tanımlamak için kullanılan bir etikettir. 
+                    searchResultTable.innerHTML = "";  // tablonun içeriği temizlenir,  yeni sonuçlar eklenir
+                    data.forEach(item => {  // JSON verileri üzerinde döngü oluşturdum.
                         var row = searchResultTable.insertRow();
                         row.insertCell().innerText = item.brand;
-                         row.insertCell().innerText = item.color;
+                        row.insertCell().innerText = item.color;
                         row.insertCell().innerText = item.plateprefix;
                         row.insertCell().innerText = item.shifttype;
                         row.insertCell().innerText = item.fuel;
@@ -303,7 +303,7 @@
                 });
         });
     </script>
-
+    
  
 
 </body>
