@@ -83,10 +83,10 @@ namespace BigDataDashboard.Controllers
         {
 
             string query = @"
-            SELECT TOP 10000 BRAND, SUBSTRING(PLATE, 1, 2) AS PlatePrefix, SHIFTTYPE, FUEL
+            SELECT TOP 10000 BRAND,COLOR, SUBSTRING(PLATE, 1, 2) AS PlateSet, SHIFTTYPE, FUEL
             FROM PLATES
-            WHERE BRAND LIKE '%' + @
-Value+ '%'
+            WHERE BRAND LIKE '%' + @Keyword + '%'
+               OR COLOR LIKE '%' + @Keyword + '%'
                OR PLATE LIKE '%' + @Keyword + '%'
                OR SHIFTTYPE LIKE '%' + @Keyword + '%'
                OR FUEL LIKE '%' + @Keyword + '%'
@@ -95,15 +95,19 @@ Value+ '%'
             await using var connection = new SqlConnection(_connectionString);
             connection.Open();
 
-            // Sorguyu çalıştırın ve sonuçları alın
+            //sorguyu çalıştırmak ve sonuç alamak için 
+            // "SearchConclusion" sınıfı, sorgu sonuçlarıyla eşleşen verileri temsil eden bir model sınıfı olmalıdır.
             var searchResults = await connection.QueryAsync<SearchConclusion>(query, new { Keyword = value });
 
-            // Sonuçları JSON formatında döndürün
+            // josn şeklinde  JsonResult" tipinde sonuç döndürü
             return Json(searchResults);
 
         }
 
+
+
+
     }
 
 }
-}
+

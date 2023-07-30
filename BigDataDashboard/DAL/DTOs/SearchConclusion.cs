@@ -2,5 +2,10 @@
 {
     public class SearchConclusion
     {
+        public string BRAND { get; set; }
+        public string COLOR { get; set; }
+        public string PLATESET { get; set; }
+        public string SHIFTTYPE { get; set; }
+        public string FUEL { get; set; }
     }
 }
